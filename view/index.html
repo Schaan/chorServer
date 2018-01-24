@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ChorServer</title>
+  <base href="/">
+
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
+  <script type="text/javascript" src="script.js"></script>
+</head>
+<body ng-app = "myApp" ng-controller="fetchAudio">
+  <div class="w3-display-container w3-center">
+    <img src="../assets/titlepic.png" style="width:100%" />
+    <h2>
+      Welcome to MuniChor - Tadpoles Project!
+    </h2>
+  </div>
+  <div style="text-align:center">
+
+    <div>
+      <button class="w3-button w3-blue" ng-click="playAudio()" [disabled]="loading">And {{state}}</button>
+    </div>
+
+  </div>
+  <script>
+    var app = angular.module('myApp', []);
+    app.controller('fetchAudio', function($scope, $http) {
+      var audioBuffer;
+      delete $http.defaults.headers.common['X-Requested-With'];
+      $http.get("api/audios",{responseType: "arraybuffer"})
+      .then(function(res) {
+        console.log(res);
+        $scope.audioCtx = new AudioContext();
+        $scope.audioCtx.decodeAudioData(res.data).then(function(res) {
+          return audioBuffer = res;
+        });
+      });
+      $scope.playAudio = function() {
+        $scope.bufferSource = $scope.audioCtx.createBufferSource();
+        console.log(audioBuffer);
+        $scope.bufferSource.buffer = audioBuffer;
+
+        $scope.bufferSource.connect($scope.audioCtx.destination);
+        $scope.bufferSource.start(0);
+      };
+
+
+    });
+
+
+    app.controller('holdAudio', function($scope) {
+      if ($scope.audioCtx.state === "running") {
+        $scope.udioCtx.suspend();
+        $scope.state = "Resume";
+      } else if ($scope.audioCtx.state === "suspended") {
+        $scope.audioCtx.resume();
+        $scope.state = "Stop";
+      }
+    })
+</script>
+</body>
+
+</html>
