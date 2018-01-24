@@ -21,45 +21,56 @@
   <div style="text-align:center">
 
     <div>
-      <button class="w3-button w3-blue" ng-click="playAudio()" [disabled]="loading">And {{state}}</button>
+      <button class="w3-button w3-blue" ng-click="playAudio()" ng-disabled="loading">{{state}}</button>
     </div>
 
   </div>
   <script>
     var app = angular.module('myApp', []);
     app.controller('fetchAudio', function($scope, $http) {
-      var audioBuffer;
+      $scope.state = 'Play';
+      $scope.loading = true;
       delete $http.defaults.headers.common['X-Requested-With'];
+
       $http.get("api/audios",{responseType: "arraybuffer"})
       .then(function(res) {
-        console.log(res);
         $scope.audioCtx = new AudioContext();
-        $scope.audioCtx.decodeAudioData(res.data).then(function(res) {
-          return audioBuffer = res;
+        return $scope.audioCtx.decodeAudioData(res.data);
+      }).then(function(res) {
+          $scope.bufferSource = $scope.audioCtx.createBufferSource();
+          $scope.bufferSource.buffer = res;
+        }).then(function() {
+          $scope.loading = false;
+          $scope.audioCtx.addEventListener('ended', function() {
+            $scope.state = 'Play';
+          });
         });
-      });
+
       $scope.playAudio = function() {
-        $scope.bufferSource = $scope.audioCtx.createBufferSource();
-        console.log(audioBuffer);
-        $scope.bufferSource.buffer = audioBuffer;
+        switch($scope.state) {
+          case 'Play':
+            $scope.bufferSource.connect($scope.audioCtx.destination);
+            $scope.bufferSource.start(0);
+            $scope.state = 'Stop';
+            break;
 
-        $scope.bufferSource.connect($scope.audioCtx.destination);
-        $scope.bufferSource.start(0);
+          case 'Stop':
+            $scope.audioCtx.suspend();
+            $scope.state = "Resume";
+            break;
+
+          case 'Resume':
+            $scope.audioCtx.resume();
+            $scope.state = "Stop";
+            break;
+        }
       };
-
-
     });
 
 
-    app.controller('holdAudio', function($scope) {
-      if ($scope.audioCtx.state === "running") {
-        $scope.udioCtx.suspend();
-        $scope.state = "Resume";
-      } else if ($scope.audioCtx.state === "suspended") {
-        $scope.audioCtx.resume();
-        $scope.state = "Stop";
-      }
-    })
+
+
+
 </script>
 </body>
 
