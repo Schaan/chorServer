@@ -2,14 +2,10 @@ import { Component } from '@angular/core';
 // import { FileService } from './file.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
+import { analyze } from 'web-audio-beat-detector';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-// import * as createPlayer from 'web-audio-player';
-// import * as audioAPI from 'web-audio-api';
 
-// interface ItemsResponse {
-//   data: ArrayBuffer;
-// }
 
 @Component({
   selector: 'app-root',
@@ -21,6 +17,7 @@ export class AppComponent {
   private audioCtx: AudioContext;
   private audioBuffer: AudioBuffer;
   state:string = "Stop";
+  tempo:number;
 
   // constructor(private fileservice: FileService) {
   constructor(private http: HttpClient) {
@@ -29,6 +26,10 @@ export class AppComponent {
       .then(buffer => {
         this.audioBuffer = buffer as AudioBuffer;
       }).then(() => {
+        analyze(this.audioBuffer)
+          .then((tempo) =>{
+            this.tempo = tempo;
+          });
         this.loading = false;
         this.playAudio();
       });
