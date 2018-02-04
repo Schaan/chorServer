@@ -5,7 +5,10 @@ import { Observable } from 'rxjs/Rx';
 import { analyze } from 'web-audio-beat-detector';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-
+import * as Granular from 'soundbank-granular/index.js';
+import * as Bopper from 'bopper/index.js';
+// declare var Granular: any;
+// declare var Bopper: any;
 
 @Component({
   selector: 'app-root',
@@ -16,6 +19,8 @@ export class AppComponent {
   private loading: boolean = true;
   private audioCtx: AudioContext;
   private audioBuffer: AudioBuffer;
+  private granularNode: any;
+  private scheduler: any;
   state:string = "Stop";
   tempo:number;
 
@@ -25,11 +30,26 @@ export class AppComponent {
     this.fetchAudio()
       .then(buffer => {
         this.audioBuffer = buffer as AudioBuffer;
+        this.scheduler = Bopper(this.audioCtx);
+
+        this.granularNode = Granular(this.audioCtx, {scheduler: this.scheduler});
+        this.granularNode.offset = [0,1];
+        this.granularNode.transpose = 0;
+        this.granularNode.sync = true;
+        this.granularNode.attack = 0;
+        this.granularNode.release = 1;
+        this.granularNode.buffer = this.audioBuffer;
       }).then(() => {
         analyze(this.audioBuffer)
           .then((tempo) =>{
-            this.tempo = tempo;
+            this.tempo = Math.floor(tempo);
+            this.scheduler.setTempo(tempo);
+
+            this.granularNode.length = this.granularNode.buffer.duration * tempo / 60;
+            this.granularNode.rate = 32;
+            this.scheduler.start();
           });
+      }).then(() => {
         this.loading = false;
         this.playAudio();
       });
@@ -53,8 +73,11 @@ export class AppComponent {
   playAudio() {
     let bufferSource = this.audioCtx.createBufferSource();
     bufferSource.buffer = this.audioBuffer;
-    bufferSource.connect(this.audioCtx.destination);
-    bufferSource.start(0);
+    // bufferSource.connect(this.audioCtx.destination);
+    // bufferSource.start(0);
+    this.granularNode.connect(this.audioCtx.destination);
+    this.granularNode.start(0);
+    console.log(this.granularNode);
   }
 
   holdAudio() {
@@ -67,5 +90,8 @@ export class AppComponent {
     }
   }
 
-
+  changeTempo(value: number) {
+    this.scheduler.setTempo(value);
+    this.granularNode.rate = Math.floor(32 * this.tempo / value);
+  }
 }
