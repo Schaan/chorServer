@@ -1,27 +1,15 @@
 # ChorServer
+It is a temporary project for development and tests of the server function for the `chorhackers` project. Before the functional integration to `chorhackers` everything related and tutorial outcomes are shown here as interchanges.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.5.
+## Short Introduction
++ `chorhackers` is an approach from the Munich Chinese chorus group MuniChor, which purpose is to create a series of useful tools to organize a computer-aided / AI-aided rehearsal process.
 
-## Development server
++ In MuniChor there is a sub-program with name of Tadpoles with orientation of a-capella arrangements. After the last regroup in chorus the Tadpoles' Project works as a pioneer for testing every new idea in matters of the whole group. `chorhackers` tends to be tested at first with recording ressources from Tadpoles and be considered as a showcase.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## ChorServer Angular
++ A website for testing all server functions and web-audio related developments
++ It is considered as a group-learning program.
 
-## Code scaffolding
+## Branches
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Run
