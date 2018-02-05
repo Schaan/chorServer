@@ -8,8 +8,15 @@
 
   <div>
     <button class="w3-button w3-blue" (click)="holdAudio()" [disabled]="loading">{{state}}</button>
-    <p [hidden]="loading">{{tempo}}</p>
+    <br />
+    <p>
+      Original speed: {{tempo}}, now let's have a try!
+    </p>
+    <mat-slider thumbLabel tickInterval="1" min="40" max="200" [value]="tempo" thumbLabel tickInterval="1" #ref (change)="changeTempo(ref.value)" style="width:600px"></mat-slider>
+    <!-- <p [hidden]="loading">{{tempo}}</p> -->
+    <br />
   </div>
+    <!-- <label id="settempo" value="tempo">{{tempo}}</label> -->
+    <!-- <input type="range" id="settempo" min="40" max="200" value="tempo" #ref (change)="changeTempo(ref.value)" /> -->
 
 </div>
-<!-- <h2>Here are some links to help you start: </h2>
