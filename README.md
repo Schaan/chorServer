@@ -27,13 +27,13 @@ So if you are really not interested in our chorus or any news about music, just 
 + Run `npm install` to install the necessary external packages after your clone.
 + Just to check the website without modification of source codes, the angular-cli is not required. From the project root folder, run `node server`. Then go to `localhost:3000` on the browser.
 + If you want to modify any codes and test, angular-cli should be installed globally by npm. Use `npm install -g @angular/cli` to install the latest version.
-+ For any modifications the project should be built at first, because the `server.js`
++ For any modifications the project should be built at first (use `ng build`), because the `server.js` uses the built dist-folder. Then run `node server` for tests on your localhost.
 + Now the URL is served for just push up the song as a `buffer`. The URL can be built into any other developments (such as `chorhackers`).
 + The actual server is under evaluation process within an alpha-test in chorus group. The libraries which should be written for more general applications will be connected to this repository as a bundle.
 + The website uses a little and tends to use more from `@angular/material` for UI.
 + For more technical details and plans please see other documentations.
 
-### Be in
+### Be in!
 + Any issue reports and pull requests are welcome!
 + If you are in Munich and interested in our chorus group, just [send us a message](mailto:munichorgroup@gmail.com)!
 
